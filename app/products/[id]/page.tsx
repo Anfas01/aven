@@ -1,5 +1,5 @@
-import BackButton from "@/components/BackButton";
-import ProductActions from "@/components/ProductActions";
+import BackButton from "@/components/ui/BackButton";
+import ProductActions from "@/components/product/ProductActions";
 import stripe from "@/lib/stripe";
 import Image from "next/image";
 import Stripe from "stripe";
@@ -134,7 +134,7 @@ export default async function Page({ params }: PageProps) {
                 </h3>
 
                 <p className="mt-2 text-sm leading-7 text-zinc-500">
-                  Return your order within 30 days if it isn't exactly what you
+                  Return your order within 30 days if it isn&apos;t exactly what you
                   expected.
                 </p>
               </div>

@@ -4,7 +4,7 @@ import { useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import Stripe from "stripe";
-import ProductCard from "./ProductCard";
+import ProductCard from "../product/ProductCard";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Props {

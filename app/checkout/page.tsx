@@ -1,9 +1,9 @@
 "use client";
 
 import { useCartStore } from "@/store/cart-store";
-import CheckoutForm from "@/components/CheckoutForm";
-import CheckoutSummary from "@/components/CheckoutSummary";
-import EmptyCheckout from "@/components/EmptyCheckout";
+import CheckoutForm from "@/components/checkout/CheckoutForm";
+import CheckoutSummary from "@/components/checkout/CheckoutSummary";
+import EmptyCheckout from "@/components/checkout/EmptyCheckout";
 
 export default function CheckoutPage() {
   const items = useCartStore((state) => state.items);

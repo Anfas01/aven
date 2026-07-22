@@ -1,5 +1,5 @@
 import stripe from "@/lib/stripe";
-import FeaturedProducts from "@/components/FeaturedProducts";
+import FeaturedProducts from "@/components/home/FeaturedProducts";
 import Link from "next/link";
 import {
   ArrowRight,

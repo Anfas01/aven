@@ -1,5 +1,5 @@
 import stripe from "@/lib/stripe";
-import ProductsList from "@/components/ProductsList";
+import ProductsList from "@/components/product/ProductsList";
 
 export default async function Page() {
   const products = await stripe.products.list({

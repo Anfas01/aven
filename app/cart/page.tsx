@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { ShoppingBag } from "lucide-react";
 import { useCartStore } from "@/store/cart-store";
-import CartItem from "@/components/CartItem";
-import OrderSummary from "@/components/OrderSummary";
+import CartItem from "@/components/cart/CartItem";
+import OrderSummary from "@/components/cart/OrderSummary";
 
 export default function CartPage() {
   const items = useCartStore((state) => state.items);
@@ -26,7 +26,7 @@ export default function CartPage() {
         </h1>
 
         <p className="mt-4 max-w-md text-center leading-7 text-zinc-500">
-          Looks like you haven't added any products yet.
+          Looks like you haven&apos;t added any products yet.
         </p>
 
         <Link

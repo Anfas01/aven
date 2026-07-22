@@ -76,7 +76,7 @@ export default function ProductsList({ products }: Props) {
           </h2>
 
           <p className="mt-2 max-w-md text-sm leading-7 text-zinc-500">
-            We couldn't find any products matching your search.
+            We couldn&apos;t find any products matching your search.
             Try a different keyword.
           </p>
         </div>
