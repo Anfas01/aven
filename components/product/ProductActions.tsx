@@ -11,6 +11,7 @@ type Props = {
     name: string;
     image: string;
     price: number;
+    priceId: string;
   };
 };
 
@@ -36,6 +37,7 @@ export default function ProductActions({ product }: Props) {
       addToCart({
         ...product,
         quantity: 1,
+        priceId: product.id,
       });
     }
   }

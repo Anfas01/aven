@@ -1,5 +1,6 @@
 "use client";
 
+import { checkout } from "@/actions/checkout";
 import { useCartStore } from "@/store/cart-store";
 
 export default function CheckoutSummary() {
@@ -9,6 +10,15 @@ export default function CheckoutSummary() {
     (total, item) => total + item.price * item.quantity,
     0
   );
+
+  async function handleCheckout() {
+    await checkout(
+      items.map((item) => ({
+        priceId: item.priceId,
+        quantity: item.quantity,
+      }))
+    );
+  }
 
   return (
     <aside className="rounded-3xl border border-zinc-200 bg-white p-8 shadow-sm lg:sticky lg:top-28">
@@ -87,7 +97,10 @@ export default function CheckoutSummary() {
       </div>
 
       {/* Button */}
-      <button className="mt-8 w-full rounded-full bg-zinc-900 py-4 text-sm font-medium text-white transition hover:bg-black">
+      <button
+        onClick={handleCheckout}
+        className="mt-8 w-full rounded-full bg-zinc-900 py-4 text-sm font-medium text-white transition hover:bg-black"
+      >
         Continue to Payment
       </button>
     </aside>

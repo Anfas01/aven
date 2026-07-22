@@ -1,0 +1,27 @@
+"use server";
+
+import { redirect } from "next/navigation";
+import stripe from "@/lib/stripe";
+
+type CheckoutItem = {
+  priceId: string;
+  quantity: number;
+};
+
+export async function checkout(items: CheckoutItem[]) {
+  if (items.length === 0) {
+    throw new Error("Cart is empty.");
+  }
+
+  const session = await stripe.checkout.sessions.create({
+    mode: "payment",
+    line_items: items.map((item) => ({
+      price: item.priceId,
+      quantity: item.quantity,
+    })),
+    success_url: `${process.env.NEXT_PUBLIC_URL}/`,
+    cancel_url: `${process.env.NEXT_PUBLIC_URL}/checkout`,
+  });
+
+  redirect(session.url!);
+}

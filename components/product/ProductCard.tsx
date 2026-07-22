@@ -37,6 +37,7 @@ export default function ProductCard({
       image: product.images[0] ?? "",
       price: (price.unit_amount ?? 0) / 100,
       quantity: 1,
+      priceId: price.id,
     });
   }
 

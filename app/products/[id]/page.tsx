@@ -83,6 +83,7 @@ export default async function Page({ params }: PageProps) {
               name: product.name,
               image: product.images[0] ?? "",
               price: (price?.unit_amount ?? 0) / 100,
+              priceId: price?.id ?? "",
             }}
           />
 

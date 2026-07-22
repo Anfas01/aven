@@ -55,9 +55,11 @@ export default function OrderSummary({
         </div>
       </div>
 
-      <button className="mt-8 w-full rounded-full bg-zinc-900 py-4 text-sm font-medium text-white transition hover:bg-black">
-        Proceed to Checkout
-      </button>
+      <Link href="/checkout">
+        <button className="mt-8 w-full rounded-full bg-zinc-900 py-4 text-sm font-medium text-white transition hover:bg-black cursor-pointer">
+          Proceed to Checkout
+        </button>
+      </Link>
 
       <Link
         href="/products"
