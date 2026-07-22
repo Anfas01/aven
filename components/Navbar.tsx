@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import CartButton from "./CartButton";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -68,26 +69,7 @@ export default function Navbar() {
         {/* Right Side */}
         <div className="flex items-center gap-3">
           {/* Cart */}
-          <Link
-            href="/cart"
-            className={`hidden rounded-full border px-5 py-2 text-sm font-medium transition-all duration-300 sm:flex sm:items-center sm:gap-2 ${
-              pathname === "/cart"
-                ? "border-zinc-900 bg-zinc-900 text-white"
-                : "border-zinc-200 text-zinc-900 hover:border-zinc-900 hover:bg-zinc-900 hover:text-white"
-            }`}
-          >
-            <ShoppingBag size={16} />
-            Cart
-            <span className="opacity-70">(0)</span>
-          </Link>
-
-          {/* Mobile Cart */}
-          <Link
-            href="/cart"
-            className="rounded-full border border-zinc-200 p-2 transition hover:border-zinc-900 hover:bg-zinc-900 hover:text-white sm:hidden"
-          >
-            <ShoppingBag size={18} />
-          </Link>
+          <CartButton />
 
           {/* Mobile Menu Button */}
           <button
