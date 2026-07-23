@@ -22,6 +22,8 @@ type CartStore = {
   increaseQuantity: (id: string) => void;
 
   decreaseQuantity: (id: string) => void;
+
+  clearCart: () => void;
 };
 
 export const useCartStore = create<CartStore>()(
@@ -104,6 +106,13 @@ export const useCartStore = create<CartStore>()(
           };
         });
       },
+
+      clearCart: () => {
+        set({
+          items: [],
+        });
+      },
+      
     }),
     {
       name: "cart-storage",

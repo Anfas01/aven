@@ -19,7 +19,7 @@ export async function checkout(items: CheckoutItem[]) {
       price: item.priceId,
       quantity: item.quantity,
     })),
-    success_url: `${process.env.NEXT_PUBLIC_URL}/`,
+    success_url: `${process.env.NEXT_PUBLIC_URL}/success?source=cart`,
     cancel_url: `${process.env.NEXT_PUBLIC_URL}/checkout`,
   });
 

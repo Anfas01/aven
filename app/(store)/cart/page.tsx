@@ -6,7 +6,9 @@ import { useCartStore } from "@/store/cart-store";
 import CartItem from "@/components/cart/CartItem";
 import OrderSummary from "@/components/cart/OrderSummary";
 
+
 export default function CartPage() {
+
   const items = useCartStore((state) => state.items);
 
   const subtotal = items.reduce(

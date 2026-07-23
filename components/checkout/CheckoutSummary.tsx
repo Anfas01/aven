@@ -44,7 +44,7 @@ export default function CheckoutSummary() {
             </div>
 
             <p className="font-medium">
-              ${(item.price * item.quantity).toFixed(2)}
+              &#8377;{(item.price * item.quantity).toFixed(2)}
             </p>
           </div>
         ))}
@@ -61,7 +61,7 @@ export default function CheckoutSummary() {
           </span>
 
           <span className="font-medium">
-            ${subtotal.toFixed(2)}
+            &#8377;{subtotal.toFixed(2)}
           </span>
         </div>
 
@@ -93,7 +93,7 @@ export default function CheckoutSummary() {
       <div className="flex items-center justify-between text-lg font-semibold">
         <span>Total</span>
 
-        <span>${subtotal.toFixed(2)}</span>
+        <span>&#8377;{subtotal.toFixed(2)}</span>
       </div>
 
       {/* Button */}
