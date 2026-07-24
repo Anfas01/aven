@@ -1,4 +1,4 @@
-import Navbar from "@/components/ui/Navbar";
+import NavbarWrapper from "@/components/ui/navbar/NavbarWrapper";
 
 export default function StoreLayout({
   children,
@@ -7,7 +7,7 @@ export default function StoreLayout({
 }>) {
   return (
     <>
-      <Navbar />
+      <NavbarWrapper />
       <main className="flex-1">{children}</main>
     </>
   );
