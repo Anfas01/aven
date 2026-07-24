@@ -3,12 +3,11 @@
 import Link from "next/link";
 import { ShoppingBag } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { useCartStore } from "@/store/cart-store";
 
 export default function CartButton() {
   const pathname = usePathname();
 
-  const items = useCartStore((state) => state.items);
+  const items = [];
 
   const totalItems = items.reduce(
     (total, item) => total + item.quantity,

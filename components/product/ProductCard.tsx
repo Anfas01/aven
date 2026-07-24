@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useCartStore } from "@/store/cart-store";
 import Image from "next/image";
 import Link from "next/link";
 import Stripe from "stripe";
-import buyNow from "@/actions/buyNow";
+import buyNow from "@/actions/stripeActions/buyNow";
 import { ShoppingBag } from "lucide-react";
+import addToCart_db from "@/actions/cartActions/addToCart";
 
 type ProductCardProps = {
   product: Stripe.Product;
@@ -30,9 +30,7 @@ export default function ProductCard({
     maximumFractionDigits: 0,
   }).format((price.unit_amount ?? 0) / 100);
 
-  const addToCart = useCartStore(
-    (state) => state.addToCart
-  );
+  const addToCart = console.log;
 
   const [isAdding, setIsAdding] =
     useState(false);
@@ -49,20 +47,32 @@ export default function ProductCard({
 
     setIsAdding(true);
 
+    const item = {
+      productId: product.id,
+      name: product.name,
+      image: product.images[0] ?? "",
+      price: (price.unit_amount ?? 0) / 100,
+      priceId: price.id,
+      quantity: 1,
+    };
+
     addToCart({
       id: product.id,
       name: product.name,
       image: product.images[0] ?? "",
       price: (price.unit_amount ?? 0) / 100,
-      quantity: 1,
       priceId: price.id,
+      quantity: 1,
     });
 
-    await new Promise((resolve) =>
-      setTimeout(resolve, 500)
-    );
+    try {
+      await addToCart_db(item);
+    } catch (error) {
+      console.error(error);
 
-    setIsAdding(false);
+    } finally {
+      setIsAdding(false);
+    }
   }
 
   async function handleBuyNow(
@@ -75,7 +85,7 @@ export default function ProductCard({
     setIsBuying(true);
 
     try {
-      await buyNow(price.id);
+      await buyNow(price.id, 1);
     } finally {
       setIsBuying(false);
     }

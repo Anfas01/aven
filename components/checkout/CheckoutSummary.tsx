@@ -1,71 +1,99 @@
 "use client";
 
-import { checkout } from "@/actions/checkout";
-import { useCartStore } from "@/store/cart-store";
+import { useState } from "react";
+import {
+  ShieldCheck,
+  Truck,
+  RotateCcw,
+  Lock,
+  ArrowRight,
+} from "lucide-react";
+import { checkout } from "@/actions/stripeActions/checkout";
 
-export default function CheckoutSummary() {
-  const items = useCartStore((state) => state.items);
+type CheckoutItem = {
+  productId: string;
+  name: string;
+  image: string;
+  price: number;
+  priceId: string;
+  quantity: number;
+};
 
-  const subtotal = items.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0
+type CheckoutSummaryProps = {
+  items: CheckoutItem[];
+  subtotal: number;
+};
+
+export default function CheckoutSummary({
+  items,
+  subtotal,
+}: CheckoutSummaryProps) {
+  const [isLoading, setIsLoading] =
+    useState(false);
+
+  const currency = new Intl.NumberFormat(
+    "en-IN",
+    {
+      style: "currency",
+      currency: "INR",
+      maximumFractionDigits: 0,
+    }
   );
 
   async function handleCheckout() {
-    await checkout(
-      items.map((item) => ({
-        priceId: item.priceId,
-        quantity: item.quantity,
-      }))
-    );
+    if (isLoading) return;
+
+    setIsLoading(true);
+
+    try {
+      await checkout(
+        items.map((item) => ({
+          priceId: item.priceId,
+          quantity: item.quantity,
+        }))
+      );
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
-    <aside className="rounded-3xl border border-zinc-200 bg-white p-8 shadow-sm lg:sticky lg:top-28">
-      <h2 className="text-2xl font-semibold tracking-tight">
-        Order Summary
-      </h2>
+    <aside className="h-fit rounded-3xl border border-zinc-200 bg-white p-8 shadow-sm lg:sticky lg:top-28">
+      {/* Heading */}
+      <div>
+        <h2 className="text-2xl font-semibold tracking-tight">
+          Order Summary
+        </h2>
 
-      {/* Products */}
-      <div className="mt-8 space-y-5">
-        {items.map((item) => (
-          <div
-            key={item.id}
-            className="flex items-center justify-between"
-          >
-            <div>
-              <p className="font-medium text-zinc-900">
-                {item.name}
-              </p>
-
-              <p className="text-sm text-zinc-500">
-                Qty: {item.quantity}
-              </p>
-            </div>
-
-            <p className="font-medium">
-              &#8377;{(item.price * item.quantity).toFixed(2)}
-            </p>
-          </div>
-        ))}
+        <p className="mt-2 text-sm leading-6 text-zinc-500">
+          Review your payment details before
+          continuing to Stripe Checkout.
+        </p>
       </div>
 
-      {/* Divider */}
-      <div className="my-8 h-px bg-zinc-200" />
-
       {/* Totals */}
-      <div className="space-y-4">
-        <div className="flex justify-between">
+      <div className="mt-8 space-y-5">
+        <div className="flex items-center justify-between">
+          <span className="text-zinc-500">
+            Items
+          </span>
+
+          <span className="font-medium">
+            {items.length}
+          </span>
+        </div>
+
+        <div className="flex items-center justify-between">
           <span className="text-zinc-500">
             Subtotal
           </span>
 
           <span className="font-medium">
-            &#8377;{subtotal.toFixed(2)}
+            {currency.format(subtotal)}
           </span>
         </div>
 
-        <div className="flex justify-between">
+        <div className="flex items-center justify-between">
           <span className="text-zinc-500">
             Shipping
           </span>
@@ -75,9 +103,9 @@ export default function CheckoutSummary() {
           </span>
         </div>
 
-        <div className="flex justify-between">
+        <div className="flex items-center justify-between">
           <span className="text-zinc-500">
-            Tax
+            Taxes
           </span>
 
           <span className="font-medium">
@@ -86,23 +114,71 @@ export default function CheckoutSummary() {
         </div>
       </div>
 
-      {/* Divider */}
-      <div className="my-8 h-px bg-zinc-200" />
+      <div className="my-8 border-t border-zinc-200" />
 
       {/* Total */}
-      <div className="flex items-center justify-between text-lg font-semibold">
-        <span>Total</span>
+      <div className="flex items-center justify-between">
+        <span className="text-lg font-semibold">
+          Total
+        </span>
 
-        <span>&#8377;{subtotal.toFixed(2)}</span>
+        <span className="text-2xl font-bold">
+          {currency.format(subtotal)}
+        </span>
       </div>
 
-      {/* Button */}
+      {/* Checkout Button */}
       <button
         onClick={handleCheckout}
-        className="mt-8 w-full rounded-full bg-zinc-900 py-4 text-sm font-medium text-white transition hover:bg-black"
+        disabled={isLoading}
+        className="mt-8 flex w-full items-center justify-center gap-2 rounded-full bg-zinc-900 px-6 py-4 text-sm font-semibold text-white transition hover:bg-black disabled:cursor-not-allowed disabled:opacity-70"
       >
-        Continue to Payment
+        {isLoading ? (
+          <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+        ) : (
+          <>
+            <Lock size={16} />
+            Continue to Secure Payment
+            <ArrowRight size={16} />
+          </>
+        )}
       </button>
+
+      {/* Trust Badges */}
+      <div className="mt-8 space-y-4 border-t border-zinc-200 pt-8">
+        <div className="flex items-center gap-3 text-sm text-zinc-600">
+          <ShieldCheck
+            size={18}
+            className="text-green-600"
+          />
+
+          <span>
+            Secure payments powered by Stripe
+          </span>
+        </div>
+
+        <div className="flex items-center gap-3 text-sm text-zinc-600">
+          <Truck
+            size={18}
+            className="text-zinc-700"
+          />
+
+          <span>
+            Free shipping on all orders
+          </span>
+        </div>
+
+        <div className="flex items-center gap-3 text-sm text-zinc-600">
+          <RotateCcw
+            size={18}
+            className="text-zinc-700"
+          />
+
+          <span>
+            30-day hassle-free returns
+          </span>
+        </div>
+      </div>
     </aside>
   );
 }

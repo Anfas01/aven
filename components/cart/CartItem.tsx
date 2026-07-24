@@ -1,38 +1,73 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Minus, Plus, Trash2 } from "lucide-react";
-import { useCartStore } from "@/store/cart-store";
+
+import { CartItem as CartItemType } from "@/types/cart";
+
+import increaseQuantity from "@/actions/cartActions/increaseQuantity";
+import decreaseQuantity from "@/actions/cartActions/decreaseQuantity";
+import removeFromCart from "@/actions/cartActions/removeFromCart";
 
 type CartItemProps = {
-  item: {
-    id: string;
-    name: string;
-    image: string;
-    price: number;
-    quantity: number;
-  };
+  item: CartItemType;
 };
 
 export default function CartItem({
   item,
 }: CartItemProps) {
-  const increaseQuantity = useCartStore(
-    (state) => state.increaseQuantity
-  );
+  const router = useRouter();
 
-  const decreaseQuantity = useCartStore(
-    (state) => state.decreaseQuantity
-  );
+  const [loading, setLoading] =
+    useState(false);
 
-  const removeFromCart = useCartStore(
-    (state) => state.removeFromCart
-  );
+  async function handleIncrease() {
+    if (loading) return;
 
-  const formattedPrice = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  }).format(item.price);
+    setLoading(true);
+
+    try {
+      await increaseQuantity(item.productId);
+      router.refresh();
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleDecrease() {
+    if (loading) return;
+
+    setLoading(true);
+
+    try {
+      await decreaseQuantity(item.productId);
+      router.refresh();
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleRemove() {
+    if (loading) return;
+
+    setLoading(true);
+
+    try {
+      await removeFromCart(item.productId);
+      router.refresh();
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const formattedPrice =
+    new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      maximumFractionDigits: 0,
+    }).format(item.price);
 
   return (
     <article className="rounded-3xl border border-zinc-200 bg-white p-4 shadow-sm transition-all duration-300 hover:shadow-md sm:p-5">
@@ -64,8 +99,9 @@ export default function CartItem({
           <div className="mt-5 flex items-center justify-between sm:hidden">
             <div className="inline-flex overflow-hidden rounded-full border border-zinc-200">
               <button
-                onClick={() => decreaseQuantity(item.id)}
-                className="flex h-9 w-9 items-center justify-center transition hover:bg-zinc-100"
+                onClick={handleDecrease}
+                disabled={loading}
+                className="flex h-9 w-9 items-center justify-center transition hover:bg-zinc-100 disabled:opacity-50"
               >
                 <Minus size={15} />
               </button>
@@ -75,16 +111,18 @@ export default function CartItem({
               </span>
 
               <button
-                onClick={() => increaseQuantity(item.id)}
-                className="flex h-9 w-9 items-center justify-center transition hover:bg-zinc-100"
+                onClick={handleIncrease}
+                disabled={loading}
+                className="flex h-9 w-9 items-center justify-center transition hover:bg-zinc-100 disabled:opacity-50"
               >
                 <Plus size={15} />
               </button>
             </div>
 
             <button
-              onClick={() => removeFromCart(item.id)}
-              className="inline-flex items-center gap-1 text-sm font-medium text-red-500 transition hover:text-red-600"
+              onClick={handleRemove}
+              disabled={loading}
+              className="inline-flex items-center gap-1 text-sm font-medium text-red-500 transition hover:text-red-600 disabled:opacity-50"
             >
               <Trash2 size={15} />
               Remove
@@ -96,8 +134,9 @@ export default function CartItem({
         <div className="hidden flex-col items-end justify-between self-stretch sm:flex">
           <div className="inline-flex overflow-hidden rounded-full border border-zinc-200">
             <button
-              onClick={() => decreaseQuantity(item.id)}
-              className="flex h-10 w-10 items-center justify-center transition hover:bg-zinc-100"
+              onClick={handleDecrease}
+              disabled={loading}
+              className="flex h-10 w-10 items-center justify-center transition hover:bg-zinc-100 disabled:opacity-50"
             >
               <Minus size={16} />
             </button>
@@ -107,16 +146,18 @@ export default function CartItem({
             </span>
 
             <button
-              onClick={() => increaseQuantity(item.id)}
-              className="flex h-10 w-10 items-center justify-center transition hover:bg-zinc-100"
+              onClick={handleIncrease}
+              disabled={loading}
+              className="flex h-10 w-10 items-center justify-center transition hover:bg-zinc-100 disabled:opacity-50"
             >
               <Plus size={16} />
             </button>
           </div>
 
           <button
-            onClick={() => removeFromCart(item.id)}
-            className="inline-flex items-center gap-2 text-sm font-medium text-red-500 transition hover:text-red-600"
+            onClick={handleRemove}
+            disabled={loading}
+            className="inline-flex items-center gap-2 text-sm font-medium text-red-500 transition hover:text-red-600 disabled:opacity-50"
           >
             <Trash2 size={16} />
             Remove

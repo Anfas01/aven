@@ -1,15 +1,12 @@
-"use client";
-
 import Link from "next/link";
 import { ShoppingBag } from "lucide-react";
-import { useCartStore } from "@/store/cart-store";
+import CartHeader from "@/components/cart/CartHeader";
 import CartItem from "@/components/cart/CartItem";
 import OrderSummary from "@/components/cart/OrderSummary";
+import getCart from "@/actions/cartActions/getCart";
 
-
-export default function CartPage() {
-
-  const items = useCartStore((state) => state.items);
+export default async function CartPage() {
+  const items = await getCart();
 
   const subtotal = items.reduce(
     (total, item) => total + item.price * item.quantity,
@@ -43,23 +40,24 @@ export default function CartPage() {
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
-      <h1 className="mb-10 text-3xl font-semibold tracking-tight sm:text-4xl">
-        Shopping Cart
-      </h1>
+      <CartHeader />
 
-      <div className="grid gap-10 lg:grid-cols-[1fr_380px]">
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start">
         {/* Cart Items */}
-        <div className="space-y-6">
+        <section className="space-y-6">
           {items.map((item) => (
             <CartItem
-              key={item.id}
+              key={item.productId}
               item={item}
             />
           ))}
-        </div>
+        </section>
 
         {/* Order Summary */}
-        <OrderSummary subtotal={subtotal} />
+        <OrderSummary
+          items={items}
+          subtotal={subtotal}
+        />
       </div>
     </main>
   );

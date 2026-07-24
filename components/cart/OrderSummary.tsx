@@ -1,14 +1,20 @@
-"use client";
-
 import Link from "next/link";
+import { CartItem } from "@/types/cart";
 
 type OrderSummaryProps = {
+  items: CartItem[];
   subtotal: number;
 };
 
 export default function OrderSummary({
+  items,
   subtotal,
 }: OrderSummaryProps) {
+  const totalItems = items.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
+
   return (
     <aside className="h-fit rounded-3xl border border-zinc-200 bg-white p-8 shadow-sm lg:sticky lg:top-28">
       <h2 className="text-2xl font-semibold">
@@ -18,11 +24,11 @@ export default function OrderSummary({
       <div className="mt-8 space-y-5">
         <div className="flex items-center justify-between">
           <span className="text-zinc-500">
-            Subtotal
+            Items ({totalItems})
           </span>
 
           <span className="font-medium">
-            &#8377;{subtotal.toFixed(2)}
+            ₹{subtotal.toFixed(2)}
           </span>
         </div>
 
@@ -50,15 +56,18 @@ export default function OrderSummary({
           <div className="flex items-center justify-between text-lg font-semibold">
             <span>Total</span>
 
-            <span>&#8377;{subtotal.toFixed(2)}</span>
+            <span>
+              ₹{subtotal.toFixed(2)}
+            </span>
           </div>
         </div>
       </div>
 
-      <Link href="/checkout">
-        <button className="mt-8 w-full rounded-full bg-zinc-900 py-4 text-sm font-medium text-white transition hover:bg-black cursor-pointer">
-          Proceed to Checkout
-        </button>
+      <Link
+        href="/checkout"
+        className="mt-8 flex h-12 w-full items-center justify-center rounded-full bg-zinc-900 text-sm font-medium text-white transition hover:bg-black"
+      >
+        Proceed to Checkout
       </Link>
 
       <Link

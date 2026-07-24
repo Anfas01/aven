@@ -1,12 +1,16 @@
-"use client";
-
-import { useCartStore } from "@/store/cart-store";
-import CheckoutForm from "@/components/checkout/CheckoutForm";
+import getCart from "@/actions/cartActions/getCart";
+import CheckoutHeader from "@/components/checkout/CheckoutHeader";
 import CheckoutSummary from "@/components/checkout/CheckoutSummary";
 import EmptyCheckout from "@/components/checkout/EmptyCheckout";
+import CheckoutItems from "@/components/checkout/CheckoutItems";
 
-export default function CheckoutPage() {
-  const items = useCartStore((state) => state.items);
+export default async function CheckoutPage() {
+  const items = await getCart();
+
+  const subtotal = items.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
 
   if (items.length === 0) {
     return (
@@ -18,13 +22,15 @@ export default function CheckoutPage() {
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
-      <h1 className="mb-10 text-3xl font-semibold tracking-tight sm:text-4xl">
-        Checkout
-      </h1>
+      <CheckoutHeader />
 
       <div className="grid gap-10 lg:grid-cols-[1fr_380px]">
-        <CheckoutForm />
-        <CheckoutSummary />
+        <CheckoutItems items={items} />
+
+        <CheckoutSummary
+          items={items}
+          subtotal={subtotal}
+        />
       </div>
     </main>
   );

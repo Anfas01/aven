@@ -2,53 +2,79 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import { CheckCircle2, ArrowRight, ShoppingBag } from "lucide-react";
-import { useCartStore } from "@/store/cart-store";
+import {
+  ArrowRight,
+  CheckCircle2,
+  Package,
+  ShoppingBag,
+} from "lucide-react";
 import { useSearchParams } from "next/navigation";
+import clearCart from "@/actions/cartActions/clearCart";
 
 export default function SuccessContent() {
   const searchParams = useSearchParams();
   const source = searchParams.get("source");
 
-  const clearCart = useCartStore((state) => state.clearCart);
-
   useEffect(() => {
-    if (source === "cart") {
-      clearCart();
+    async function handleSuccess() {
+      if (source === "cart") {
+        await clearCart();
+      }
     }
-  }, [source, clearCart]);
+
+    handleSuccess();
+  }, [source]);
 
   return (
-    <main className="flex min-h-[calc(100vh-80px)] items-center justify-center bg-zinc-50 px-6 py-16">
-      <div className="w-full max-w-xl rounded-3xl border border-zinc-200 bg-white p-10 text-center shadow-sm">
-        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-zinc-900 text-white">
-          <CheckCircle2 className="h-10 w-10" />
+    <main className="flex min-h-[calc(100vh-80px)] items-center justify-center px-6 py-16">
+      <section className="w-full max-w-2xl rounded-3xl border border-zinc-200 bg-white p-8 shadow-sm sm:p-12">
+        {/* Success Icon */}
+        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-green-50">
+          <CheckCircle2 className="h-10 w-10 text-green-600" />
         </div>
 
-        <h1 className="mt-8 text-4xl font-semibold tracking-tight text-zinc-900">
-          Payment Successful
-        </h1>
-
-        <p className="mx-auto mt-4 max-w-md text-base leading-7 text-zinc-500">
-          Thank you for your purchase. Your order has been confirmed and is
-          being prepared. A confirmation email will be sent shortly.
-        </p>
-
-        <div className="mt-10 rounded-2xl border border-zinc-200 bg-zinc-50 p-5">
-          <p className="text-sm font-medium text-zinc-900">
-            Order Status
+        {/* Heading */}
+        <div className="mt-8 text-center">
+          <p className="text-sm font-medium uppercase tracking-[0.3em] text-zinc-500">
+            Payment Successful
           </p>
 
-          <p className="mt-2 text-sm text-zinc-500">
-            Payment received successfully. We&apos;ll notify you once your order
-            has been shipped.
+          <h1 className="mt-3 text-4xl font-semibold tracking-tight text-zinc-900">
+            Thank You for Your Order
+          </h1>
+
+          <p className="mx-auto mt-5 max-w-lg leading-7 text-zinc-500">
+            Your payment has been processed successfully. We&apos;re now preparing
+            your order for shipment. You&apos;ll receive a confirmation email with
+            your order details shortly.
           </p>
         </div>
 
-        <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+        {/* Status Card */}
+        <div className="mt-10 rounded-2xl border border-zinc-200 bg-zinc-50 p-6">
+          <div className="flex items-start gap-4">
+            <div className="rounded-xl bg-white p-3 shadow-sm">
+              <Package className="h-5 w-5 text-zinc-700" />
+            </div>
+
+            <div>
+              <h2 className="font-semibold text-zinc-900">
+                Order Confirmed
+              </h2>
+
+              <p className="mt-2 text-sm leading-6 text-zinc-500">
+                Your order has been placed successfully and is waiting to be
+                processed. We&apos;ll notify you as soon as it&apos;s shipped.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Actions */}
+        <div className="mt-10 flex flex-col gap-4 sm:flex-row">
           <Link
             href="/products"
-            className="flex flex-1 items-center justify-center gap-2 rounded-full bg-zinc-900 px-6 py-3 text-sm font-medium text-white transition hover:bg-black"
+            className="flex flex-1 items-center justify-center gap-2 rounded-full bg-zinc-900 px-6 py-4 text-sm font-medium text-white transition hover:bg-black"
           >
             Continue Shopping
             <ArrowRight className="h-4 w-4" />
@@ -56,13 +82,13 @@ export default function SuccessContent() {
 
           <Link
             href="/"
-            className="flex flex-1 items-center justify-center gap-2 rounded-full border border-zinc-300 bg-white px-6 py-3 text-sm font-medium text-zinc-900 transition hover:border-zinc-900 hover:bg-zinc-50"
+            className="flex flex-1 items-center justify-center gap-2 rounded-full border border-zinc-300 px-6 py-4 text-sm font-medium text-zinc-900 transition hover:border-zinc-900 hover:bg-zinc-50"
           >
             <ShoppingBag className="h-4 w-4" />
-            Home
+            Back to Home
           </Link>
         </div>
-      </div>
+      </section>
     </main>
   );
 }

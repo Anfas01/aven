@@ -1,6 +1,6 @@
 "use client";
 
-import register from "@/actions/register";
+import register from "@/actions/authActions/register";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
