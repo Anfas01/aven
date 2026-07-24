@@ -16,6 +16,7 @@ export default function Navbar() {
     { name: "Products", href: "/products" },
     { name: "Checkout", href: "/checkout" },
     { name: "Orders", href: "/orders" },
+    { name: "Account", href: "/account" },
   ];
 
   const isActive = (href: string) =>
