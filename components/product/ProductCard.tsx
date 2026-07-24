@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useCartStore } from "@/store/cart-store";
 import Image from "next/image";
 import Link from "next/link";
@@ -33,10 +34,20 @@ export default function ProductCard({
     (state) => state.addToCart
   );
 
-  function handleAddToCart(
+  const [isAdding, setIsAdding] =
+    useState(false);
+
+  const [isBuying, setIsBuying] =
+    useState(false);
+
+  async function handleAddToCart(
     e: React.MouseEvent
   ) {
     e.preventDefault();
+
+    if (isAdding) return;
+
+    setIsAdding(true);
 
     addToCart({
       id: product.id,
@@ -46,13 +57,28 @@ export default function ProductCard({
       quantity: 1,
       priceId: price.id,
     });
+
+    await new Promise((resolve) =>
+      setTimeout(resolve, 500)
+    );
+
+    setIsAdding(false);
   }
 
-  function handleBuyNow(
+  async function handleBuyNow(
     e: React.MouseEvent
   ) {
     e.preventDefault();
-    buyNow(price.id);
+
+    if (isBuying) return;
+
+    setIsBuying(true);
+
+    try {
+      await buyNow(price.id);
+    } finally {
+      setIsBuying(false);
+    }
   }
 
   return (
@@ -80,9 +106,7 @@ export default function ProductCard({
       {/* Content */}
       <div className="flex flex-1 flex-col justify-between p-5">
         <div>
-          <Link
-            href={`/products/${product.id}`}
-          >
+          <Link href={`/products/${product.id}`}>
             <h3 className="line-clamp-1 text-base font-semibold text-zinc-900 transition-colors hover:text-zinc-600">
               {product.name}
             </h3>
@@ -98,25 +122,37 @@ export default function ProductCard({
           {/* Buy Now */}
           <button
             onClick={handleBuyNow}
-            className="flex flex-1 items-center justify-center rounded-xl bg-zinc-900 px-3 py-2.5 text-xs font-semibold text-white transition-all duration-200 hover:bg-zinc-800 active:scale-[0.97]"
+            disabled={isBuying}
+            className="flex h-10 flex-1 items-center justify-center rounded-xl bg-zinc-900 px-3 text-xs font-semibold text-white transition-all duration-200 hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-70"
           >
-            Buy Now
+            {isBuying ? (
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+            ) : (
+              "Buy Now"
+            )}
           </button>
 
           {/* Add to Cart */}
           <button
             onClick={handleAddToCart}
+            disabled={isAdding}
             title="Add to Cart"
-            className="group/cart flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl border border-zinc-200 bg-zinc-50 text-zinc-700 transition-all duration-300 hover:w-36 hover:border-zinc-300 hover:bg-zinc-100 active:scale-[0.97]"
+            className="group/cart flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl border border-zinc-200 bg-zinc-50 text-zinc-700 transition-all duration-300 hover:w-36 hover:border-zinc-300 hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-70"
           >
-            <ShoppingBag
-              size={16}
-              className="shrink-0"
-            />
+            {isAdding ? (
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-zinc-700 border-t-transparent" />
+            ) : (
+              <>
+                <ShoppingBag
+                  size={16}
+                  className="shrink-0"
+                />
 
-            <span className="ml-0 w-0 overflow-hidden whitespace-nowrap text-xs font-medium opacity-0 transition-all duration-300 group-hover/cart:ml-2 group-hover/cart:w-20 group-hover/cart:opacity-100">
-              Add to Cart
-            </span>
+                <span className="ml-0 w-0 overflow-hidden whitespace-nowrap text-xs font-medium opacity-0 transition-all duration-300 group-hover/cart:ml-2 group-hover/cart:w-20 group-hover/cart:opacity-100">
+                  Add to Cart
+                </span>
+              </>
+            )}
           </button>
         </div>
       </div>
