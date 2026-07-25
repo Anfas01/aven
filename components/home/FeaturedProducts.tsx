@@ -4,17 +4,20 @@ import { useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import Stripe from "stripe";
-import ProductCard from "../product/ProductCard";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+
+import ProductCard from "../product/ProductCard";
 
 interface Props {
   products: Stripe.Product[];
 }
 
-export default function FeaturedProducts({ products }: Props) {
+export default function FeaturedProducts({
+  products,
+}: Props) {
   const [autoplay] = useState(() =>
     Autoplay({
-      delay: 3000,
+      delay: 3500,
       stopOnInteraction: false,
       stopOnMouseEnter: true,
     })
@@ -22,53 +25,22 @@ export default function FeaturedProducts({ products }: Props) {
 
   const [emblaRef, emblaApi] = useEmblaCarousel(
     {
-      loop: true,
+      loop: products.length > 1,
       align: "start",
+      containScroll: "trimSnaps",
       skipSnaps: false,
     },
     [autoplay]
   );
 
   return (
-    <section className="relative">
-      {/* Header */}
-      <div className="mb-8 flex flex-col gap-6 sm:mb-10 sm:flex-row sm:items-end sm:justify-between lg:mb-12">
-        <div>
-          <p className="text-xs uppercase tracking-[0.35em] text-zinc-500 sm:text-sm">
-            Featured
-          </p>
-
-          <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
-            Latest Collection
-          </h2>
-        </div>
-
-        {/* Controls */}
-        <div className="flex gap-3 self-start sm:self-auto">
-          <button
-            onClick={() => emblaApi?.scrollPrev()}
-            disabled={!emblaApi}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-zinc-200 transition hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-50 sm:h-11 sm:w-11 lg:h-12 lg:w-12"
-          >
-            <ChevronLeft size={20} />
-          </button>
-
-          <button
-            onClick={() => emblaApi?.scrollNext()}
-            disabled={!emblaApi}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-zinc-200 transition hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-50 sm:h-11 sm:w-11 lg:h-12 lg:w-12"
-          >
-            <ChevronRight size={20} />
-          </button>
-        </div>
-      </div>
-
+    <section className="w-full">
       {/* Carousel */}
       <div
         ref={emblaRef}
-        className="overflow-hidden touch-pan-y"
+        className="overflow-hidden"
       >
-        <div className="-ml-4 flex">
+        <div className="-ml-4 flex sm:-ml-6">
           {products.map((product) => (
             <div
               key={product.id}
@@ -77,6 +49,7 @@ export default function FeaturedProducts({ products }: Props) {
                 flex-[0_0_100%]
                 pl-4
                 sm:flex-[0_0_50%]
+                sm:pl-6
                 lg:flex-[0_0_33.333%]
                 xl:flex-[0_0_25%]
               "
@@ -86,6 +59,33 @@ export default function FeaturedProducts({ products }: Props) {
           ))}
         </div>
       </div>
+
+      {/* Navigation */}
+      {products.length > 1 && (
+        <div className="mt-8 flex justify-center">
+          <div className="inline-flex items-center rounded-full border border-zinc-200 bg-white p-1.5 shadow-sm">
+            <button
+              type="button"
+              onClick={() => emblaApi?.scrollPrev()}
+              aria-label="Previous products"
+              className="flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 hover:bg-zinc-900 hover:text-white"
+            >
+              <ChevronLeft size={18} />
+            </button>
+
+            <div className="mx-1 h-5 w-px bg-zinc-200" />
+
+            <button
+              type="button"
+              onClick={() => emblaApi?.scrollNext()}
+              aria-label="Next products"
+              className="flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 hover:bg-zinc-900 hover:text-white"
+            >
+              <ChevronRight size={18} />
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
