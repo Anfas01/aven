@@ -8,7 +8,10 @@ export default function StoreLayout({
   return (
     <>
       <NavbarWrapper />
-      <main className="flex-1">{children}</main>
+
+      <main className="min-h-screen flex-1 pt-20">
+        {children}
+      </main>
     </>
   );
 }

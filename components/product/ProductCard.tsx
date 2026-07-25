@@ -3,10 +3,12 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Stripe from "stripe";
-import buyNow from "@/actions/stripeActions/buyNow";
 import { ShoppingBag } from "lucide-react";
-import addToCart_db from "@/actions/cartActions/addToCart";
+
+import addToCart from "@/actions/cartActions/addToCart";
+import buyNow from "@/actions/stripeActions/buyNow";
 
 type ProductCardProps = {
   product: Stripe.Product;
@@ -15,6 +17,8 @@ type ProductCardProps = {
 export default function ProductCard({
   product,
 }: ProductCardProps) {
+  const router = useRouter();
+
   if (
     typeof product.default_price !== "object" ||
     !product.default_price
@@ -30,16 +34,11 @@ export default function ProductCard({
     maximumFractionDigits: 0,
   }).format((price.unit_amount ?? 0) / 100);
 
-  const addToCart = console.log;
-
-  const [isAdding, setIsAdding] =
-    useState(false);
-
-  const [isBuying, setIsBuying] =
-    useState(false);
+  const [isAdding, setIsAdding] = useState(false);
+  const [isBuying, setIsBuying] = useState(false);
 
   async function handleAddToCart(
-    e: React.MouseEvent
+    e: React.MouseEvent<HTMLButtonElement>
   ) {
     e.preventDefault();
 
@@ -47,36 +46,26 @@ export default function ProductCard({
 
     setIsAdding(true);
 
-    const item = {
-      productId: product.id,
-      name: product.name,
-      image: product.images[0] ?? "",
-      price: (price.unit_amount ?? 0) / 100,
-      priceId: price.id,
-      quantity: 1,
-    };
-
-    addToCart({
-      id: product.id,
-      name: product.name,
-      image: product.images[0] ?? "",
-      price: (price.unit_amount ?? 0) / 100,
-      priceId: price.id,
-      quantity: 1,
-    });
-
     try {
-      await addToCart_db(item);
-    } catch (error) {
-      console.error(error);
+      await addToCart({
+        productId: product.id,
+        name: product.name,
+        image: product.images[0] ?? "",
+        price: (price.unit_amount ?? 0) / 100,
+        priceId: price.id,
+        quantity: 1,
+      });
 
+      router.refresh();
+    } catch (error) {
+      console.error("Failed to add item to cart:", error);
     } finally {
       setIsAdding(false);
     }
   }
 
   async function handleBuyNow(
-    e: React.MouseEvent
+    e: React.MouseEvent<HTMLButtonElement>
   ) {
     e.preventDefault();
 
@@ -104,10 +93,10 @@ export default function ProductCard({
             alt={product.name}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-xs text-zinc-400">
+          <div className="flex h-full items-center justify-center text-xs text-zinc-400">
             No image available
           </div>
         )}
@@ -127,13 +116,11 @@ export default function ProductCard({
           </p>
         </div>
 
-        {/* Actions */}
-        <div className="mt-5 flex items-center gap-2">
-          {/* Buy Now */}
+        <div className="mt-5 flex gap-2">
           <button
             onClick={handleBuyNow}
             disabled={isBuying}
-            className="flex h-10 flex-1 items-center justify-center rounded-xl bg-zinc-900 px-3 text-xs font-semibold text-white transition-all duration-200 hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-70"
+            className="flex h-10 flex-1 items-center justify-center rounded-xl bg-zinc-900 px-3 text-xs font-semibold text-white transition hover:bg-black disabled:cursor-not-allowed disabled:opacity-70"
           >
             {isBuying ? (
               <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
@@ -142,7 +129,6 @@ export default function ProductCard({
             )}
           </button>
 
-          {/* Add to Cart */}
           <button
             onClick={handleAddToCart}
             disabled={isAdding}

@@ -9,7 +9,7 @@ import {
   CreditCard,
 } from "lucide-react";
 
-import addToCart_db from "@/actions/cartActions/addToCart";
+import addToCart from "@/actions/cartActions/addToCart";
 import buyNow from "@/actions/stripeActions/buyNow";
 
 type Props = {
@@ -54,7 +54,7 @@ export default function ProductActions({
     setIsAdding(true);
 
     try {
-      await addToCart_db({
+      await addToCart({
         productId: product.productId,
         name: product.name,
         image: product.image,

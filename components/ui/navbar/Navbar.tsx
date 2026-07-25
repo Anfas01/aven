@@ -18,31 +18,71 @@ export default function Navbar({ cartCount }: Props) {
   const pathname = usePathname();
 
   const [open, setOpen] = useState(false);
+
   const [scrolled, setScrolled] = useState(false);
+  const [visible, setVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
-    const handler = () => {
-      setScrolled(window.scrollY > 8);
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      setScrolled(currentScrollY > 8);
+
+      // Always show at the top
+      if (currentScrollY < 10) {
+        setVisible(true);
+      }
+      // Scrolling down
+      else if (currentScrollY > lastScrollY) {
+        setVisible(false);
+      }
+      // Scrolling up
+      else {
+        setVisible(true);
+      }
+
+      setLastScrollY(currentScrollY);
     };
 
-    handler();
+    window.addEventListener("scroll", handleScroll, {
+      passive: true,
+    });
 
-    window.addEventListener("scroll", handler);
-
-    return () => window.removeEventListener("scroll", handler);
-  }, []);
+    return () =>
+      window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
 
   const accountActive = pathname.startsWith("/account");
 
   return (
     <header
-      className={`sticky top-0 z-50 border-b border-zinc-200/80 bg-white/80 backdrop-blur-xl transition-all duration-300 ${
-        scrolled ? "shadow-sm" : ""
-      }`}
+      className={`
+        fixed
+        top-0
+        left-0
+        right-0
+        z-50
+        border-b
+        border-zinc-200/80
+        bg-white/80
+        backdrop-blur-xl
+        transition-all
+        duration-300
+        ${
+          visible
+            ? "translate-y-0"
+            : "-translate-y-full"
+        }
+        ${scrolled ? "shadow-sm" : ""}
+      `}
     >
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3">
+        <Link
+          href="/"
+          className="flex items-center gap-3"
+        >
           <Image
             src="/logo.png"
             alt="Aven"
@@ -63,7 +103,6 @@ export default function Navbar({ cartCount }: Props) {
         <div className="flex items-center gap-3">
           <CartButton totalItems={cartCount} />
 
-          {/* Account Button */}
           <Link
             href="/account"
             className={`hidden lg:inline-flex items-center gap-2 rounded-full border px-5 py-2 text-sm font-medium transition-all duration-300 ${
@@ -76,18 +115,20 @@ export default function Navbar({ cartCount }: Props) {
             <span>Account</span>
           </Link>
 
-          {/* Mobile Menu Toggle */}
           <button
             onClick={() => setOpen(!open)}
             className="rounded-full border border-zinc-200 p-2 transition-all duration-300 hover:border-zinc-900 hover:bg-zinc-900 hover:text-white lg:hidden"
             aria-label="Toggle menu"
           >
-            {open ? <X size={20} /> : <Menu size={20} />}
+            {open ? (
+              <X size={20} />
+            ) : (
+              <Menu size={20} />
+            )}
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu */}
       <MobileMenu
         open={open}
         close={() => setOpen(false)}

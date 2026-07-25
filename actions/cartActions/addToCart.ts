@@ -15,7 +15,7 @@ type AddToCartInput = {
   quantity: number;
 };
 
-export default async function addToCart_db({
+export default async function addToCart({
   productId,
   name,
   image,
