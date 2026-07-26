@@ -46,6 +46,21 @@ export default async function getOrders(): Promise<OrderData[]> {
       stripePaymentIntentId:
         order.stripePaymentIntentId,
 
+      shippingName: order.shippingName,
+
+      shippingEmail: order.shippingEmail,
+
+      shippingPhone: order.shippingPhone,
+
+      shippingAddress: {
+        line1: order.shippingAddress.line1,
+        line2: order.shippingAddress.line2,
+        city: order.shippingAddress.city,
+        state: order.shippingAddress.state,
+        postalCode: order.shippingAddress.postalCode,
+        country: order.shippingAddress.country,
+      },
+
       createdAt: new Date(
         order.createdAt
       ).toISOString(),

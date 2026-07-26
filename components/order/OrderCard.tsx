@@ -75,7 +75,7 @@ export default function OrderCard({ order }: Props) {
           </span>
 
           <Link
-            href={`/account/orders/${order._id}`}
+            href={`/orders/${order._id}`}
             className="inline-flex items-center gap-2 text-sm font-medium text-zinc-900 transition hover:gap-3"
           >
             View Details

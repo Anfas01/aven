@@ -33,6 +33,25 @@ export interface OrderDocument extends Document {
 
   stripePaymentIntentId: string;
 
+  shippingName: string;
+
+  shippingEmail?: string;
+
+  shippingPhone?: string;
+
+  shippingAddress: {
+    line1: string;
+    line2?: string;
+
+    city: string;
+
+    state: string;
+
+    postalCode: string;
+
+    country: string;
+  };
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -63,6 +82,43 @@ const OrderItemSchema = new Schema<OrderItem>(
       type: Number,
       required: true,
       min: 1,
+    },
+  },
+  {
+    _id: false,
+  }
+);
+
+const ShippingAddressSchema = new Schema(
+  {
+    line1: {
+      type: String,
+      required: true,
+    },
+
+    line2: {
+      type: String,
+      default: "",
+    },
+
+    city: {
+      type: String,
+      required: true,
+    },
+
+    state: {
+      type: String,
+      required: true,
+    },
+
+    postalCode: {
+      type: String,
+      required: true,
+    },
+
+    country: {
+      type: String,
+      required: true,
     },
   },
   {
@@ -124,6 +180,26 @@ const OrderSchema = new Schema<OrderDocument>(
 
     stripePaymentIntentId: {
       type: String,
+      required: true,
+    },
+
+    shippingName: {
+      type: String,
+      required: true,
+    },
+
+    shippingEmail: {
+      type: String,
+      default: "",
+    },
+
+    shippingPhone: {
+      type: String,
+      default: "",
+    },
+
+    shippingAddress: {
+      type: ShippingAddressSchema,
       required: true,
     },
   },

@@ -67,6 +67,7 @@ export default async function createOrder({
     status: "processing",
 
     items: cart.items,
+
   });
 
   await Cart.findOneAndDelete({
