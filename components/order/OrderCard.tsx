@@ -1,8 +1,15 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import Image from "next/image";
+import {
+  ArrowRight,
+  CalendarDays,
+  CreditCard,
+  Package,
+} from "lucide-react";
 
 type OrderItem = {
   name: string;
+  image: string;
   quantity: number;
 };
 
@@ -20,68 +27,164 @@ interface Props {
   order: Order;
 }
 
+const orderStatusColors: Record<string, string> = {
+  processing:
+    "bg-amber-50 text-amber-700 ring-1 ring-amber-200",
+
+  shipped:
+    "bg-sky-50 text-sky-700 ring-1 ring-sky-200",
+
+  delivered:
+    "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200",
+
+  cancelled:
+    "bg-red-50 text-red-700 ring-1 ring-red-200",
+};
+
+const paymentStatusColors: Record<string, string> = {
+  paid:
+    "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200",
+
+  pending:
+    "bg-yellow-50 text-yellow-700 ring-1 ring-yellow-200",
+
+  failed:
+    "bg-red-50 text-red-700 ring-1 ring-red-200",
+
+  refunded:
+    "bg-zinc-100 text-zinc-700 ring-1 ring-zinc-200",
+};
+
 export default function OrderCard({ order }: Props) {
   const date = new Intl.DateTimeFormat("en-IN", {
     dateStyle: "medium",
   }).format(new Date(order.createdAt));
 
-  const price = new Intl.NumberFormat("en-IN", {
+  const total = new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency: "INR",
     maximumFractionDigits: 0,
   }).format(order.subtotal);
 
   return (
-    <article className="rounded-3xl border border-zinc-200 bg-white p-6 transition-all duration-300 hover:border-zinc-300 hover:shadow-sm">
-      <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-        {/* Left */}
-        <div className="space-y-4">
-          <div>
-            <p className="text-xs font-medium uppercase tracking-[0.25em] text-zinc-500">
-              Order
-            </p>
+    <article className="group overflow-hidden rounded-2rem border border-zinc-200 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-zinc-300 hover:shadow-xl">
+      <div className="p-6 sm:p-8">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+          {/* LEFT */}
+          <div className="flex flex-col gap-6 sm:flex-row">
+            {/* Images */}
+            <div className="flex shrink-0 -space-x-4">
+              {order.items.slice(0, 3).map((item, index) => (
+                <div
+                  key={index}
+                  className="relative h-24 w-24 overflow-hidden rounded-3xl border-4 border-white bg-zinc-100 shadow-sm"
+                >
+                  {item.image ? (
+                    <Image
+                      src={item.image}
+                      alt={item.name}
+                      fill
+                      className="object-cover transition duration-500 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center">
+                      <Package className="h-8 w-8 text-zinc-400" />
+                    </div>
+                  )}
+                </div>
+              ))}
 
-            <h2 className="mt-1 text-xl font-semibold text-zinc-900">
-              {order.orderNumber}
-            </h2>
+              {order.items.length > 3 && (
+                <div className="flex h-24 w-24 items-center justify-center rounded-3xl border-4 border-white bg-zinc-900 text-lg font-semibold text-white shadow-sm">
+                  +{order.items.length - 3}
+                </div>
+              )}
+            </div>
+
+            {/* Details */}
+            <div className="flex-1">
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-400">
+                Order #{order.orderNumber}
+              </p>
+
+              <h2 className="mt-3 text-3xl font-bold tracking-tight text-zinc-900">
+                {order.items[0]?.name}
+              </h2>
+
+              {order.items.length > 1 && (
+                <p className="mt-2 text-zinc-500">
+                  + {order.items.length - 1} more item
+                  {order.items.length > 2 ? "s" : ""}
+                </p>
+              )}
+
+              {/* Info */}
+              <div className="mt-6 flex flex-wrap gap-3">
+                <div className="inline-flex items-center gap-2 rounded-full bg-zinc-100 px-4 py-2 text-sm text-zinc-700">
+                  <CalendarDays className="h-4 w-4" />
+                  {date}
+                </div>
+
+                <div className="inline-flex items-center gap-2 rounded-full bg-zinc-100 px-4 py-2 text-sm text-zinc-700">
+                  <Package className="h-4 w-4" />
+                  {order.items.length} item
+                  {order.items.length > 1 ? "s" : ""}
+                </div>
+
+                <div className="inline-flex items-center gap-2 rounded-full bg-zinc-100 px-4 py-2 text-sm text-zinc-700">
+                  <CreditCard className="h-4 w-4" />
+                  {total}
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div className="flex flex-wrap gap-x-8 gap-y-3 text-sm">
-            <div>
-              <p className="text-zinc-500">Date</p>
-              <p className="mt-1 font-medium text-zinc-900">{date}</p>
+          {/* RIGHT */}
+          <div className="flex flex-col gap-5 lg:min-w-220px lg:items-end">
+            <div className="flex flex-wrap gap-2">
+              <span
+                className={`rounded-full px-4 py-2 text-sm font-medium capitalize ${
+                  orderStatusColors[order.orderStatus] ??
+                  "bg-zinc-100 text-zinc-700"
+                }`}
+              >
+                {order.orderStatus}
+              </span>
+
+              <span
+                className={`rounded-full px-4 py-2 text-sm font-medium capitalize ${
+                  paymentStatusColors[order.paymentStatus] ??
+                  "bg-zinc-100 text-zinc-700"
+                }`}
+              >
+                {order.paymentStatus}
+              </span>
             </div>
 
-            <div>
-              <p className="text-zinc-500">Items</p>
-              <p className="mt-1 font-medium text-zinc-900">
-                {order.items.length}
-              </p>
-            </div>
+            <Link
+              href={`/orders/${order._id}`}
+              className="inline-flex items-center gap-2 rounded-full bg-zinc-900 px-6 py-3 font-medium text-white transition-all duration-300 hover:bg-black hover:shadow-lg"
+            >
+              View Order
 
-            <div>
-              <p className="text-zinc-500">Total</p>
-              <p className="mt-1 font-semibold text-zinc-900">
-                {price}
-              </p>
-            </div>
+              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+            </Link>
           </div>
         </div>
+      </div>
 
-        {/* Right */}
-        <div className="flex flex-col items-start gap-4 lg:items-end">
-          <span className="rounded-full bg-amber-50 px-4 py-2 text-sm font-medium text-amber-700">
-            {order.orderStatus}
+      {/* Bottom Bar */}
+      <div className="flex items-center justify-between border-t border-zinc-100 bg-zinc-50/70 px-6 py-4 text-sm sm:px-8">
+        <span className="text-zinc-500">
+          Ordered on{" "}
+          <span className="font-medium text-zinc-700">
+            {date}
           </span>
+        </span>
 
-          <Link
-            href={`/orders/${order._id}`}
-            className="inline-flex items-center gap-2 text-sm font-medium text-zinc-900 transition hover:gap-3"
-          >
-            View Details
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
+        <span className="font-semibold text-zinc-900">
+          {total}
+        </span>
       </div>
     </article>
   );

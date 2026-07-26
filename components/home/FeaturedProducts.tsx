@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import Stripe from "stripe";
@@ -15,9 +15,22 @@ interface Props {
 export default function FeaturedProducts({
   products,
 }: Props) {
+  // Only show products that have everything needed for ProductCard
+  const visibleProducts = useMemo(
+    () =>
+      products.filter(
+        (product) =>
+          product.active &&
+          product.name &&
+          product.images.length > 0 &&
+          product.default_price
+      ),
+    [products]
+  );
+
   const [autoplay] = useState(() =>
     Autoplay({
-      delay: 3500,
+      delay: 2500,
       stopOnInteraction: false,
       stopOnMouseEnter: true,
     })
@@ -25,13 +38,18 @@ export default function FeaturedProducts({
 
   const [emblaRef, emblaApi] = useEmblaCarousel(
     {
-      loop: products.length > 1,
+      loop: visibleProducts.length > 1,
       align: "start",
       containScroll: "trimSnaps",
       skipSnaps: false,
     },
     [autoplay]
   );
+
+  // Don't render the carousel if there are no valid products
+  if (visibleProducts.length === 0) {
+    return null;
+  }
 
   return (
     <section className="w-full">
@@ -41,7 +59,7 @@ export default function FeaturedProducts({
         className="overflow-hidden"
       >
         <div className="-ml-4 flex sm:-ml-6">
-          {products.map((product) => (
+          {visibleProducts.map((product) => (
             <div
               key={product.id}
               className="
@@ -61,7 +79,7 @@ export default function FeaturedProducts({
       </div>
 
       {/* Navigation */}
-      {products.length > 1 && (
+      {visibleProducts.length > 1 && (
         <div className="mt-8 flex justify-center">
           <div className="inline-flex items-center rounded-full border border-zinc-200 bg-white p-1.5 shadow-sm">
             <button
@@ -70,7 +88,7 @@ export default function FeaturedProducts({
               aria-label="Previous products"
               className="flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 hover:bg-zinc-900 hover:text-white"
             >
-              <ChevronLeft size={18} />
+              <ChevronLeft className="h-5 w-5" />
             </button>
 
             <div className="mx-1 h-5 w-px bg-zinc-200" />
@@ -81,7 +99,7 @@ export default function FeaturedProducts({
               aria-label="Next products"
               className="flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 hover:bg-zinc-900 hover:text-white"
             >
-              <ChevronRight size={18} />
+              <ChevronRight className="h-5 w-5" />
             </button>
           </div>
         </div>
