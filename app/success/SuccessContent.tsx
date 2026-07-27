@@ -18,7 +18,7 @@ export default function SuccessContent() {
 
   const hasCleared = useRef(false);
 
-  const [countdown, setCountdown] = useState(5);
+  const [countdown, setCountdown] = useState(10);
 
   // Clear cart once
   useEffect(() => {

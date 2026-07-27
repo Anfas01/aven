@@ -1,8 +1,19 @@
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 export default function SuccessHero() {
   return (
     <section className="relative overflow-hidden rounded-2rem border border-zinc-200 bg-white px-6 py-12 shadow-sm sm:px-10 sm:py-16">
+
+      <div className="relative z-10 flex justify-end">
+        <Link
+          href="/orders"
+          className="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-700 transition-all duration-300 hover:-translate-y-0.5 hover:border-zinc-300 hover:bg-zinc-50 hover:shadow-sm"
+        >
+          View My Orders<ArrowRight className="h-4 w-4" />
+        </Link>
+      </div>
+
       {/* Background Decorations */}
       <div className="absolute -top-20 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-emerald-100/50 blur-3xl" />
 

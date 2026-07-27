@@ -5,7 +5,9 @@ interface Props {
 export default function SuccessProgress({
   countdown,
 }: Props) {
-  const progress = ((5 - countdown) / 5) * 100;
+  const TOTAL_SECONDS = 10;
+
+  const progress = ((TOTAL_SECONDS - countdown) / TOTAL_SECONDS) * 100;
 
   return (
     <section className="rounded-2rem border border-zinc-200 bg-white p-6 shadow-sm sm:p-8">
@@ -19,7 +21,8 @@ export default function SuccessProgress({
         </h2>
 
         <p className="mt-3 text-zinc-500">
-          You&apos;ll be redirected automatically in
+          Take a moment to review your confirmation. We&apos;ll automatically
+          redirect you to your orders in
         </p>
 
         <p className="mt-2 text-5xl font-bold tracking-tight text-zinc-900">
