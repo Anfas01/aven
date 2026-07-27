@@ -2,20 +2,19 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Menu, X, User } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { Menu, X, } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import DesktopNav from "./DesktopNav";
 import MobileMenu from "./MobileMenu";
 import CartButton from "./CartButton";
+import UserMenu from "./UserMenu";
 
 interface Props {
   cartCount: number;
 }
 
 export default function Navbar({ cartCount }: Props) {
-  const pathname = usePathname();
 
   const [open, setOpen] = useState(false);
 
@@ -53,8 +52,6 @@ export default function Navbar({ cartCount }: Props) {
       window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
-  const accountActive = pathname.startsWith("/account");
-
   return (
     <header
       className={`
@@ -69,10 +66,9 @@ export default function Navbar({ cartCount }: Props) {
         backdrop-blur-xl
         transition-all
         duration-300
-        ${
-          visible
-            ? "translate-y-0"
-            : "-translate-y-full"
+        ${visible
+          ? "translate-y-0"
+          : "-translate-y-full"
         }
         ${scrolled ? "shadow-sm" : ""}
       `}
@@ -103,17 +99,10 @@ export default function Navbar({ cartCount }: Props) {
         <div className="flex items-center gap-3">
           <CartButton totalItems={cartCount} />
 
-          <Link
-            href="/account"
-            className={`hidden lg:inline-flex items-center gap-2 rounded-full border px-5 py-2 text-sm font-medium transition-all duration-300 ${
-              accountActive
-                ? "border-zinc-900 bg-zinc-900 text-white"
-                : "border-zinc-200 text-zinc-900 hover:border-zinc-900 hover:bg-zinc-900 hover:text-white"
-            }`}
-          >
-            <User className="h-4 w-4" />
-            <span>Account</span>
-          </Link>
+          <UserMenu
+            name="zoro"
+            email="zoro123@gmail.com"
+          />
 
           <button
             onClick={() => setOpen(!open)}
