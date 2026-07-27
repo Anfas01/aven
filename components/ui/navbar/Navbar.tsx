@@ -121,6 +121,8 @@ export default function Navbar({ cartCount }: Props) {
       <MobileMenu
         open={open}
         close={() => setOpen(false)}
+        name="zoro"
+        email="zoro123@gmail.com"
       />
     </header>
   );
