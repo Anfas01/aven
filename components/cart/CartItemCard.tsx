@@ -15,7 +15,7 @@ type CartItemProps = {
   item: CartItemType;
 };
 
-export default function CartItem({
+export default function CartItemCard({
   item,
 }: CartItemProps) {
   const router = useRouter();

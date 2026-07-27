@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ShoppingBag } from "lucide-react";
 import CartHeader from "@/components/cart/CartHeader";
-import CartItem from "@/components/cart/CartItem";
+import CartItem from "@/components/cart/CartItemCard";
 import OrderSummary from "@/components/cart/OrderSummary";
 import getCart from "@/actions/cartActions/getCart";
 

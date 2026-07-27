@@ -35,7 +35,6 @@ export default function ProductCard({
   }).format((price.unit_amount ?? 0) / 100);
 
   const [isAdding, setIsAdding] = useState(false);
-  const [isBuying, setIsBuying] = useState(false);
 
   async function handleAddToCart(
     e: React.MouseEvent<HTMLButtonElement>
@@ -61,22 +60,6 @@ export default function ProductCard({
       console.error("Failed to add item to cart:", error);
     } finally {
       setIsAdding(false);
-    }
-  }
-
-  async function handleBuyNow(
-    e: React.MouseEvent<HTMLButtonElement>
-  ) {
-    e.preventDefault();
-
-    if (isBuying) return;
-
-    setIsBuying(true);
-
-    try {
-      await buyNow(price.id, 1);
-    } finally {
-      setIsBuying(false);
     }
   }
 
@@ -117,17 +100,12 @@ export default function ProductCard({
         </div>
 
         <div className="mt-5 flex gap-2">
-          <button
-            onClick={handleBuyNow}
-            disabled={isBuying}
+          <Link
+            href={`/products/${product.id}`}
             className="flex h-10 flex-1 items-center justify-center rounded-xl bg-zinc-900 px-3 text-xs font-semibold text-white transition hover:bg-black disabled:cursor-not-allowed disabled:opacity-70"
           >
-            {isBuying ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-            ) : (
-              "Buy Now"
-            )}
-          </button>
+            Buy Now
+          </Link>
 
           <button
             onClick={handleAddToCart}

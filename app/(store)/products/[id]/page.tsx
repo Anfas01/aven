@@ -1,5 +1,5 @@
-import BackButton from "@/components/ui/BackButton";
 import ProductActions from "@/components/product/ProductActions";
+import BackButton from "@/components/order/orderDetails/BackButton";
 import stripe from "@/lib/stripe";
 import Image from "next/image";
 import Stripe from "stripe";
@@ -33,10 +33,10 @@ export default async function Page({
 
   const formattedPrice = price
     ? new Intl.NumberFormat("en-IN", {
-        style: "currency",
-        currency: price.currency.toUpperCase(),
-        maximumFractionDigits: 0,
-      }).format(unitPrice)
+      style: "currency",
+      currency: price.currency.toUpperCase(),
+      maximumFractionDigits: 0,
+    }).format(unitPrice)
     : "Unavailable";
 
   const productData = {
@@ -49,11 +49,11 @@ export default async function Page({
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12">
-      <BackButton />
-
       <div className="grid gap-10 lg:grid-cols-2 lg:gap-20">
         {/* Left */}
         <div className="self-start lg:sticky lg:top-28">
+          <BackButton />
+
           <div className="overflow-hidden rounded-32px border border-zinc-200 bg-zinc-50 shadow-sm transition-shadow duration-500 hover:shadow-xl">
             {product.images.length > 0 ? (
               <div className="group relative aspect-square overflow-hidden">

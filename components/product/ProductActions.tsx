@@ -114,32 +114,33 @@ export default function ProductActions({
 
       {/* Buttons */}
       <section className="mt-10 flex flex-col gap-4 sm:mt-12 sm:flex-row">
+
         <button
-          onClick={handleAddToCart}
+          onClick={handleBuyNow}
           disabled={isAdding || isBuying}
           className="inline-flex w-full items-center justify-center gap-3 rounded-full bg-zinc-900 px-8 py-4 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
         >
-          {isAdding ? (
+          {isBuying ? (
             <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
           ) : (
             <>
-              <ShoppingBag size={18} />
-              Add to Cart
+              <CreditCard size={18} />
+              Buy Now
             </>
           )}
         </button>
 
         <button
-          onClick={handleBuyNow}
+          onClick={handleAddToCart}
           disabled={isAdding || isBuying}
           className="inline-flex w-full items-center justify-center gap-3 rounded-full border border-zinc-300 bg-white px-8 py-4 text-sm font-medium text-zinc-900 transition-all duration-300 hover:border-zinc-900 hover:bg-zinc-900 hover:text-white hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
         >
-          {isBuying ? (
+          {isAdding ? (
             <div className="h-5 w-5 animate-spin rounded-full border-2 border-zinc-900 border-t-transparent" />
           ) : (
             <>
-              <CreditCard size={18} />
-              Buy Now
+              <ShoppingBag size={18} />
+              Add to Cart
             </>
           )}
         </button>
