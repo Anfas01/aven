@@ -10,6 +10,41 @@
 
 ---
 
+# 🧪 Demo Credentials
+
+This application uses **Stripe Test Mode (Sandbox)**, so **no real payments are processed**.
+
+You can register with your own account or use the following sample information during checkout.
+
+### Sample Customer Information
+
+| Field | Value |
+|-------|-------|
+| Name | Rahul Sharma |
+| Email | rahul.sharma@example.com |
+| Phone | +91 9876543210 |
+| Address | 12 MG Road |
+| City | Bengaluru |
+| State | Karnataka |
+| PIN Code | 560001 |
+| Country | India |
+
+### Stripe Test Card
+
+| Field | Value |
+|-------|-------|
+| Card Number | `4242 4242 4242 4242` |
+| Expiry Date | Any future date (e.g. `12/34`) |
+| CVV | Any 3 digits (e.g. `123`) |
+| Cardholder Name | Any name |
+| OTP | 000000 |
+
+> **Note**
+>
+> This project uses **Stripe Sandbox (Test Mode)**. No real payments are processed, and no actual charges will be made. Feel free to use the test card above to explore the complete checkout flow.
+
+---
+
 # 📖 Overview
 
 Aven is a modern e-commerce application built to demonstrate real-world full-stack development practices using the latest Next.js App Router architecture.
