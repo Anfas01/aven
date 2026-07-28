@@ -1,36 +1,359 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🛍️ Aven — Modern Full-Stack E-commerce Platform
 
-## Getting Started
+> A production-ready full-stack e-commerce application built with **Next.js**, **TypeScript**, **MongoDB**, and **Stripe**, featuring secure authentication, real-time checkout, order management, and a modern responsive user experience.
 
-First, run the development server:
+## 🌐 Live Demo
+
+**Application:** https://aven-omega.vercel.app/
+
+**Source Code:** https://github.com/Anfas01/aven
+
+---
+
+# 📖 Overview
+
+Aven is a modern e-commerce application built to demonstrate real-world full-stack development practices using the latest Next.js App Router architecture.
+
+The application allows users to browse products, securely authenticate, manage shopping carts, purchase products through Stripe Checkout, and view their order history.
+
+Instead of relying on a traditional REST backend, the application leverages **Next.js Server Actions** for server-side business logic, resulting in a cleaner and more maintainable architecture.
+
+---
+
+# ✨ Key Features
+
+### 🛒 Shopping Experience
+
+* Browse available products
+* Product detail pages
+* Responsive product grid
+* Search products
+* Shopping cart management
+* Quantity updates
+* Buy Now functionality
+
+### 🔐 Authentication
+
+* JWT authentication
+* Secure password hashing with bcrypt
+* Protected routes
+* HTTP-only cookies
+* Login & Registration
+
+### 💳 Payments
+
+* Stripe Checkout integration
+* Secure payment flow
+* Buy Now support
+* Checkout directly from cart
+* Automatic order creation using Stripe Webhooks
+
+### 📦 Orders
+
+* Order history
+* Purchased products
+* Payment status
+* Customer information
+* Order persistence in MongoDB
+
+### ⚡ Backend
+
+* Next.js Server Actions
+* MongoDB database
+* Mongoose models
+* Secure API endpoints
+* Stripe webhook handling
+
+---
+
+# 🛠 Tech Stack
+
+| Category        | Technology              |
+| --------------- | ----------------------- |
+| Framework       | Next.js 15 (App Router) |
+| Language        | TypeScript              |
+| Database        | MongoDB                 |
+| ODM             | Mongoose                |
+| Authentication  | JWT + bcrypt            |
+| Payment Gateway | Stripe Checkout         |
+| Styling         | Tailwind CSS            |
+| UI Components   | shadcn/ui               |
+| Deployment      | Vercel                  |
+| Linting         | ESLint                  |
+
+---
+
+# 🏗 Architecture
+
+```
+Client
+   │
+   ▼
+Next.js App Router
+   │
+   ▼
+Server Actions
+   │
+   ├──────── MongoDB
+   │
+   └──────── Stripe API
+                  │
+                  ▼
+          Stripe Checkout
+                  │
+                  ▼
+          Stripe Webhook
+                  │
+                  ▼
+          Order Creation
+```
+
+---
+
+# 📂 Project Structure
+
+```
+.
+├── actions
+│   ├── authActions
+│   ├── cartActions
+│   └── stripeActions
+│
+├── app
+│   ├── (auth)
+│   ├── (store)
+│   └── api
+│       └── webhooks
+│
+├── components
+├── lib
+├── models
+├── types
+└── public
+```
+
+---
+
+# 🔄 Application Flow
+
+```
+Visitor
+      │
+      ▼
+Browse Products
+      │
+      ▼
+View Product
+      │
+      ▼
+Login / Register
+      │
+      ▼
+Add to Cart
+      │
+      ▼
+Checkout
+      │
+      ▼
+Stripe Payment
+      │
+      ▼
+Webhook
+      │
+      ▼
+Create Order
+      │
+      ▼
+Order History
+```
+
+---
+
+# 🔐 Authentication Flow
+
+1. User registers.
+2. Password is hashed using **bcrypt**.
+3. JWT token is generated.
+4. Token is stored in an HTTP-only cookie.
+5. Protected Server Actions verify the token before executing.
+6. Logout clears the authentication cookie.
+
+---
+
+# 💳 Stripe Payment Flow
+
+```
+User Checkout
+      │
+      ▼
+Create Stripe Session
+      │
+      ▼
+Redirect to Stripe
+      │
+      ▼
+Successful Payment
+      │
+      ▼
+Stripe Webhook
+      │
+      ▼
+Verify Signature
+      │
+      ▼
+Create Order
+      │
+      ▼
+Success Page
+```
+
+---
+
+# 🗄 Database Models
+
+### User
+
+* Authentication
+* Profile information
+
+### Cart
+
+* User reference
+* Cart items
+* Quantity
+
+### Order
+
+* Purchased products
+* Shipping information
+* Payment information
+* User reference
+* Order status
+
+---
+
+# ⚙ Environment Variables
+
+Create a `.env.local` file.
+
+| Variable                | Description               |
+| ----------------------- | ------------------------- |
+| `MONGODB_URI`           | MongoDB connection string |
+| `JWT_SECRET`            | JWT signing secret        |
+| `STRIPE_SECRET_KEY`     | Stripe Secret Key         |
+| `STRIPE_WEBHOOK_SECRET` | Stripe Webhook Secret     |
+| `NEXT_PUBLIC_URL`       | Application URL           |
+
+---
+
+# 🚀 Getting Started
+
+Clone the repository
+
+```bash
+git clone https://github.com/Anfas01/aven.git
+```
+
+Move into the project
+
+```bash
+cd aven
+```
+
+Install dependencies
+
+```bash
+npm install
+```
+
+Run development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Build production
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Start production
 
-## Learn More
+```bash
+npm run start
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# 📜 Available Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Command       | Description              |
+| ------------- | ------------------------ |
+| npm run dev   | Start development server |
+| npm run build | Build production         |
+| npm run start | Start production         |
+| npm run lint  | Run ESLint               |
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# 🚀 Highlights
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project demonstrates experience with:
+
+* Full-stack application architecture
+* Next.js App Router
+* Server Actions
+* Authentication & Authorization
+* Stripe payment integration
+* MongoDB data modeling
+* Webhook implementation
+* Secure backend development
+* Responsive UI development
+* TypeScript best practices
+
+---
+
+# 🔮 Future Improvements
+
+* Admin dashboard
+* Product reviews
+* Wishlist
+* Inventory management
+* Email notifications
+* Search filters
+* Product recommendations
+* Optimistic UI updates
+* Role-based authorization
+
+---
+
+# 🤝 Contributing
+
+Contributions are welcome.
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push your branch
+5. Open a Pull Request
+
+---
+
+# 📄 License
+
+This project is available for educational and portfolio purposes.
+
+---
+
+# 👨‍💻 Developer
+
+**Anfas**
+
+GitHub: https://github.com/Anfas01
+
+Project Repository:
+https://github.com/Anfas01/aven
+
+Live Application:
+https://aven-omega.vercel.app/
